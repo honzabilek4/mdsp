@@ -6,7 +6,7 @@
 
 unsigned long hash(unsigned char *data)
 {
-    unsigned long hash = 5381;
+    unsigned long hash = 5361;
     int c;
 
     while (c = *data++)
