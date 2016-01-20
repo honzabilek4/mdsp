@@ -26,12 +26,12 @@ int dominantVec(int numSubFram, float *input) {
 
 ResCon getCandidate(int start , float *input, int numSubFrames){
     int maj_index = start ;
-    float border= (*input + start)/16 ;
+    float border= *(input + start)/16 ;
     int count, count1 = 1 ;
     ResCon result ;
     for(i = start+1 ; i < numSubFram ; i++){
-        if(*input + i <= *input + maj_index + border &&
-        *input +maj_index - border <= *input+i){
+        if(*(input + i) <= *(input + maj_index) + border &&
+        *(input +maj_index) - border <= *(input+i)){
             count ++ ;
             count1 ++ ;
         }
@@ -41,7 +41,7 @@ ResCon getCandidate(int start , float *input, int numSubFrames){
             maj_index = i ;
             count = 1 ;
             count1 = 1 ;
-            border= (*input + maj_index)/16;
+            border= *(input + maj_index)/16;
         }
     }
     result.index = maj_index ;
