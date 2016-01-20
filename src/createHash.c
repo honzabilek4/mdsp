@@ -10,7 +10,7 @@ unsigned long hash(unsigned char *data)
     int c;
 
     while (c = *data++)
-        hash = hash xor *(data+c) ;
+        hash = hash xor c ;
        
     return hash;
 }
