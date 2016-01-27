@@ -21,11 +21,11 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int fillHeight = 0; //dynamic variables, depend on actual loop
 	int fillWidth = 0;
 
-	for (i = 0; i < (heightF) / blockSize; i++)
+	for (i = 0; i < heightF / blockSize; i++)
 	{
 		p_row = input + i*blockSize*width;
 
-		for (j = 0; j < (widthF) / blockSize; j++)
+		for (j = 0; j < widthF / blockSize; j++)
 		{
 			p_in = p_row + j*blockSize;
 
@@ -49,7 +49,7 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 }
 
 
-void merge(int blockSize, int width, int height, unsigned char *input, unsigned char *output)
+void merge(int blockSize, int width, int height, unsigned char *input, unsigned char *output, int *mv)
 {
 	int i, j, k;
 	unsigned char *p_out;
@@ -61,11 +61,11 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int fillHeight = 0;
 	int fillWidth = 0;
 
-	for (i = 0; i < (heightF) / blockSize; i++)
+	for (i = 0; i < heightF / blockSize; i++)
 	{
 	    p_row = output + i*blockSize*width;
 
-		for (j = 0; j < (widthF) / blockSize; j++)
+		for (j = 0; j < widthF / blockSize; j++)
 		{
 			p_out = p_row + j*blockSize;
 
