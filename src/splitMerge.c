@@ -8,7 +8,7 @@
 //frame is divided into the blocks blockSize x blockSize
 //direction is from the most left to the right block per block-row
 //within each block pixels are copied per row
-void split(int blockSize, int width, int height, unsigned char *input, unsigned char *output)
+void split(int blockSize, int width, int height, unsigned char *input, unsigned char *output, int* blockIndex)
 {
 
 	int i, j, k;
@@ -31,7 +31,7 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 
 			fillHeight = i == (height / blockSize) ? pixFillHeight : 0;
 			fillWidth = j == (width / blockSize) ? pixFillWidth : 0;
-
+            memset(blockIndex + )
 			for (k = 0; k < blockSize - fillHeight; k++) //ordinal loop
 			{
 				memcpy(output, p_in + k*width, blockSize - fillWidth); //copy pixels to output
@@ -54,8 +54,32 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int i, j, k;
 	unsigned char *p_out;
 	unsigned char *p_row;
+
+	/*TODO:
+	Computation of pixFillHeight and pixFillWidth needs fix!!
+
+	Short example:
+
+	height = 270
+	270 % 8 == 6
+	276 / 8 == 34.5 !!WRONG
+
+	We need result 2, which is heightF==272 in this case
+
+	This also does't solve the problem:
+	int pixFillHeight = blockSize - height % blockSize;
+
+	because if modulo == 0:
+
+	pixFillHeight == 8
+
+
+	*/
+
 	int pixFillHeight = height%blockSize; //compute resting pixels filled in
 	int pixFillWidth = width%blockSize;
+
+
 	int heightF = height + pixFillHeight;
 	int widthF = width + pixFillWidth;
 	int fillHeight = 0;
