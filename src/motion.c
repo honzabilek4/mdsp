@@ -32,8 +32,8 @@ void fullSearch(int width, int height, int blockSize, unsigned int *indexOfBlock
 
     pre=sizeof(int);
 
-            for(i=0;i<nblockH;i++){
-                for(j=0;j<(nblockW;j++){
+            for(i=0;i<(height-blockSize);i++){
+                for(j=0;j<(width-blockSize);j++){
 
                     sad=SAD(reference+j*blockSize+i*width,input,blockSize,width);
                     if (pre>sad){
@@ -43,10 +43,9 @@ void fullSearch(int width, int height, int blockSize, unsigned int *indexOfBlock
                     }
                 }
             }
-        mv[0]= (*indexOfBlock)%nblockW-i;
-        mv[1]= ((*indexOfBlock)/nblockW)*dwidth-j;// calculate the movement vector
-        //*(output+(i+j*nbblock)*2)=mv[0];
-        //*(output+(i+j*nbblock)*2+1)=mv[1];
+        mv[0]= ((*indexOfBlock)*blockSize)%width-i;
+        mv[1]= ((*indexOfBlock)/nblockW)*blockSize-j;// calculate the movement vector
+
 
         memset(output_x+indexOfBlock,mv[0],1);
         memset(output_y+indexOfBlock,mv[1],1);
