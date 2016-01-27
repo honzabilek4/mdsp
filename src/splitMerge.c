@@ -14,8 +14,8 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int i, j, k;
 	unsigned char *p_in;
 	unsigned char *p_row;
-	int pixFillHeight = height%blockSize; //compute resting pixels to be filled in, in order to make frame dividable by blockSize
-	int pixFillWidth = width%blockSize;
+	int pixFillHeight = blockSize - (height%blockSize); //compute resting pixels to be filled in, in order to make frame dividable by blockSize
+	int pixFillWidth  = blockSize - (width%blockSize) ;
 	int heightF = height + pixFillHeight; //get filled size
 	int widthF = width + pixFillWidth;
 	int fillHeight = 0; //dynamic variables, depend on actual loop
@@ -76,8 +76,8 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 
 	*/
 
-	int pixFillHeight = height%blockSize; //compute resting pixels filled in
-	int pixFillWidth = width%blockSize;
+	int pixFillHeight = height - (height%blockSize); //compute resting pixels filled in
+	int pixFillWidth = width - (width%blockSize);
 
 
 	int heightF = height + pixFillHeight;
