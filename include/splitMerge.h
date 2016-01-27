@@ -15,7 +15,7 @@
 * @param output
 *        the output buffer of size blockSize*blockSize
 */
-void split(int blockSize, int width, int height, IN unsigned char *input, OUT unsigned char *output);
+void split(int blockSize, int width, int height, IN unsigned char *input, OUT unsigned char *output, OUT int *blockIndex);
 
 /**
 *
@@ -30,6 +30,6 @@ void split(int blockSize, int width, int height, IN unsigned char *input, OUT un
 * @param output
 *        the output image of size width*height
 */
-void merge(int blockSize, int width, int height, IN unsigned char *input, OUT unsigned char *output);
+void merge(int blockSize, int width, int height,IN unsigned char *input,OUT unsigned char *output,IN int *mv);
 
 #endif

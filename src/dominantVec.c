@@ -1,16 +1,19 @@
 #include <string.h>
 #include <stdlib.h>
 #include "dominantVec.h"
- 
 
-void dominantVec(int numSubFram , int *inputx , int *inputy , int *output) {
-    
+
+void dominantVec(int width, int height, int blockSize ,IN int *input_x , int *input_y ,OUT int *output) {
+
+    int numSubFrames = (width + blockSize - width%blockSize)/blockSize)*
+                       (height + blockSize - height%blockSize)/blockSize;
+
     int startVal = 0 ;
     ResCon result = getCandiate (startVal ,inputx ,inputy , numSubFrames);
     int numbofLoops = 1 ;
     int count = result.count ;
     int index = result.index ;
-    
+
     while (numbofLoops < numSubFrames || count < numSubFrames/3){
         startVal++;
         result = getCandiate(startVal ,inputx ,inputy , numSubFrames);

@@ -5,7 +5,7 @@
 
 
 // block comp return SAD of block
-unsigned int SAD(int *ref, int *cur,int blockSize,int width){
+unsigned int SAD(unsigned char *ref, unsigned char *cur,int blockSize,int width){
     unsigned int res;
     int i, j;
 
@@ -20,16 +20,16 @@ unsigned int SAD(int *ref, int *cur,int blockSize,int width){
 }
 
 //full Search algorithm - comparing one actual block to the reference frame
-void fullSearch(int width, int height, int blockSize, unsigned int *indexOfBlock,unsigned char *input, unsigned char *reference, int *output_x,int *ouput_y)
+void fullSearch(int width, int height, int blockSize,IN int *blockIndex,IN unsigned char *input,IN unsigned char *reference,OUT int *output_x,OUT int *output_y)
 {
     int i,j;
     int sad,pre;
     int positon[2],mv[2];
-    int nblockH = (height+height%blockSize)/blockSize;
-    int nblockW = (width + width%blockSize)/blockSize;
+    int nblockH = (height + blockSize - height%blockSize)/blockSize;
+    int nblockW = (width + blockSize - width%blockSize)/blockSize;
     if(*reference == NULL)
         return;
-
+    int currentIndex = *blockIndex;
     pre=sizeof(int);
 
             for(i=0;i<(height-blockSize);i++){
@@ -43,12 +43,12 @@ void fullSearch(int width, int height, int blockSize, unsigned int *indexOfBlock
                     }
                 }
             }
-        mv[0]= ((*indexOfBlock)*blockSize)%width-i;
-        mv[1]= ((*indexOfBlock)/nblockW)*blockSize-j;// calculate the movement vector
+        mv[0]= (currentIndex*blockSize)%width-i;
+        mv[1]= (currentIndex/nblockW)*blockSize-j;// calculate the movement vector
 
 
-        memset(output_x+indexOfBlock,mv[0],1);
-        memset(output_y+indexOfBlock,mv[1],1);
+        memset(output_x+currentIndex,mv[0],1);
+        memset(output_y+currentIndex,mv[1],1);
 
 
 }
