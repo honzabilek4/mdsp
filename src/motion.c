@@ -20,7 +20,7 @@ unsigned int SAD(int *ref, int *cur,int blockSize,int width){
 }
 
 //full Search algorithm - comparing one actual block to the reference frame
-void fullSearch(int width, int height, int blockSize, unsigned char *input, unsigned char *reference, unsigned char *output)
+void fullSearch(int width, int height, int blockSize, unsigned int *indexOfBlock,unsigned char *input, unsigned char *reference, int *output_x,int *ouput_y)
 {
     int i,j;
     int sad,pre;
@@ -43,12 +43,14 @@ void fullSearch(int width, int height, int blockSize, unsigned char *input, unsi
                     }
                 }
             }
-        mv[0]= m-i;
-        mv[1]= n*dwidth-j;// calculate the movement vector
-        *(output+(i+j*nbblock)*2)=mv[0];
-        *(output+(i+j*nbblock)*2+1)=mv[1];
-        }
-    }
+        mv[0]= (*indexOfBlock)%nblockW-i;
+        mv[1]= ((*indexOfBlock)/nblockW)*dwidth-j;// calculate the movement vector
+        //*(output+(i+j*nbblock)*2)=mv[0];
+        //*(output+(i+j*nbblock)*2+1)=mv[1];
+
+        memset(output_x+indexOfBlock,mv[0],1);
+        memset(output_y+indexOfBlock,mv[1],1);
+
 
 }
 
