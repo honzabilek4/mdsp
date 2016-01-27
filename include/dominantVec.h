@@ -7,7 +7,7 @@ typedef struct ResCon{
 	   int count;
 	   int index;
 };
-int dominantVec(int numSubFram, float *input);
-ResCon getCandidate(int start , float *input, int numSubFrames);
+void dominantVec(int numSubFram , int *inputx , int *inputy , int *output) ;
+ResCon getCandidate(int start , int *inputx, int *inputy, int numSubFrames) ;
 
 #endif
