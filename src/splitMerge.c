@@ -1,47 +1,83 @@
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #include "splitMerge.h"
 
-void split(int blockSize, int width, int height, unsigned char *input, unsigned char *output) {
+
+//frame is divided into the blocks blockSize x blockSize
+//direction is from the most left to the right block per block-row
+//within each block pixels are copied per row
+void split(int blockSize, int width, int height, unsigned char *input, unsigned char *output)
+{
 
 	int i, j, k;
-	unsigned char *p_in = input;
-	unsigned char *p_out = output;
+	unsigned char *p_in;
+	unsigned char *p_row;
+	int pixFillHeight = height%blockSize; //compute resting pixels to be filled in, in order to make frame dividable by blockSize
+	int pixFillWidth = width%blockSize;
+	int heightF = height + pixFillHeight; //get filled size
+	int widthF = width + pixFillWidth;
+	int fillHeight = 0; //dynamic variables, depend on actual loop
+	int fillWidth = 0;
 
-	for (i = 0; i <= height / blockSize; i++)
+	for (i = 0; i < heightF / blockSize; i++)
 	{
-		for (j = 0; j <= width / blockSize; j++)
-		{
-			for (k = 0; k < blockSize; k++)
-			{
-				memcpy(p_out, p_in + k*width, blockSize); //copy one block line to output
-				p_out += blockSize; //increment output pointer per one block line
-			}
-			p_in += j*blockSize;
-		}
-		p_in = input + i*blockSize*width;
-	}
+		p_row = input + i*blockSize*width;
 
+		for (j = 0; j < widthF / blockSize; j++)
+		{
+			p_in = p_row + j*blockSize;
+
+			fillHeight = i == (height / blockSize) ? pixFillHeight : 0;
+			fillWidth = j == (width / blockSize) ? pixFillWidth : 0;
+
+			for (k = 0; k < blockSize - fillHeight; k++) //ordinal loop
+			{
+				memcpy(output, p_in + k*width, blockSize - fillWidth); //copy pixels to output
+				memset(output + (blockSize - fillWidth), 0, fillWidth); // fill the last block to size of blockSize
+				output += blockSize; //increment output pointer per one block line
+			}
+			for (k = 0; k < fillHeight; k++)    //loop for last row
+			{
+				memset(output, 0, blockSize);
+				output += blockSize;
+			}
+
+		}
+	}
 }
 
 
-void merge(int blockSize, int width, int height, unsigned char *input, unsigned char *output) {
+void merge(int blockSize, int width, int height, unsigned char *input, unsigned char *output, int *mv)
+{
 	int i, j, k;
-	unsigned char *p_in = input;
-	unsigned char *p_out = output;
-    int	frameSize = width*height;
-	for (i = 0; i < height; i++)
+	unsigned char *p_out;
+	unsigned char *p_row;
+	int pixFillHeight = height%blockSize; //compute resting pixels filled in
+	int pixFillWidth = width%blockSize;
+	int heightF = height + pixFillHeight;
+	int widthF = width + pixFillWidth;
+	int fillHeight = 0;
+	int fillWidth = 0;
+
+	for (i = 0; i < heightF / blockSize; i++)
 	{
-		for (j = 0; j < width; j++)
+	    p_row = output + i*blockSize*width;
+
+		for (j = 0; j < widthF / blockSize; j++)
 		{
-			for (k = 0; k < frameSize/(blockSize*blockSize); k++)
-			{
-				memcpy(p_out, p_in, blockSize); //copy one block line to output
-				p_out += blockSize; //increment output pointer per one block line
-				p_in += j*blockSize*blockSize;
+			p_out = p_row + j*blockSize;
+
+			fillHeight = i == (height / blockSize) ? pixFillHeight : 0;
+			fillWidth = j == (width / blockSize) ? pixFillWidth : 0;
+
+			for (k = 0; k < blockSize - fillHeight; k++)
+            {
+				memcpy(p_out + k*width, input, blockSize - fillWidth);
+				input += blockSize;
 			}
+
 		}
-		p_in = input + i* blockSize*blockSize;
 	}
 }
