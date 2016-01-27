@@ -76,8 +76,8 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 
 	*/
 
-	int pixFillHeight = height - (height%blockSize); //compute resting pixels filled in
-	int pixFillWidth = width - (width%blockSize);
+	int pixFillHeight = blockSize - (height%blockSize); //compute resting pixels filled in
+	int pixFillWidth = blockSize  - (width%blockSize);
 
 
 	int heightF = height + pixFillHeight;
