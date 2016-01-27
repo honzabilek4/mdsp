@@ -1,0 +1,55 @@
+#include <string.h>
+#include <stdlib.h>
+#include <math.h>
+#include "motion.h"
+
+
+// block comp return SAD of block
+unsigned int SAD(int *ref, int *cur,int blockSize,int width){
+    unsigned int res;
+    int i, j;
+
+	for (i = 0; i < blockSize; ++i)
+	{
+		for (j = 0; j < blockSize; ++j)
+		{
+			res += abs(cur[j + i*width] - ref[j + i*blockSize]);
+		}
+	}
+	return res;
+}
+
+//full Search algorithm - comparing one actual block to the reference frame
+void fullSearch(int width, int height, int blockSize, unsigned char *input, unsigned char *reference, unsigned char *output)
+{
+    int i,j;
+    int sad,pre;
+    int positon[2],mv[2];
+    int nblockH = (height+height%blockSize)/blockSize;
+    int nblockW = (width + width%blockSize)/blockSize;
+    if(*reference == NULL)
+        return;
+
+    pre=sizeof(int);
+
+            for(i=0;i<nblockH;i++){
+                for(j=0;j<(nblockW;j++){
+
+                    sad=SAD(reference+j*blockSize+i*width,input,blockSize,width);
+                    if (pre>sad){
+                        pre=sad;
+                        positon[0]=i;
+                        positon[1]=j;// we get position of the best corresponding block
+                    }
+                }
+            }
+        mv[0]= m-i;
+        mv[1]= n*dwidth-j;// calculate the movement vector
+        *(output+(i+j*nbblock)*2)=mv[0];
+        *(output+(i+j*nbblock)*2+1)=mv[1];
+        }
+    }
+
+}
+
+
