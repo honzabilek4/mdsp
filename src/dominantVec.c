@@ -1,37 +1,43 @@
 #include <string.h>
 #include <stdlib.h>
 #include "dominantVec.h"
+ 
 
-
-int dominantVec(int numSubFram, float *input) {
+void dominantVec(int numSubFram , int *inputx , int *inputy , int *output) {
     
     int startVal = 0 ;
-    ResCon result = getCandiate (startVal ,input , numSubFrames);
+    ResCon result = getCandiate (startVal ,inputx ,inputy , numSubFrames);
     int numbofLoops = 1 ;
     int count = result.count ;
     int index = result.index ;
     
-    while (numbofLoops < numSubFrames || count < numSubFrames/2){
+    while (numbofLoops < numSubFrames || count < numSubFrames/3){
         startVal++;
-        result = getCandiate(startVal , input , numSubFrames);
+        result = getCandiate(startVal ,inputx ,inputy , numSubFrames);
         numbofLoops++ ;
         if(count < result.count){
             index = result.index ;
             count = result.count ;
         }
     }
-    return index;
+	memset(output, *(inputx+result.index) , 1);
+	output ++;
+	memset(output, *(inputy+result.index) , 1);
+    ///return index;
 }
 
 
-ResCon getCandidate(int start , float *input, int numSubFrames){
+ResCon getCandidate(int start , int *inputx, int *inputy, int numSubFrames){
     int maj_index = start ;
-    float border= *(input + start)/16 ;
+    float borderx = *(inputx + start)/16 ;
+	float bordery = *(inputy + start)/16 ;
     int count, count1 = 1 ;
     ResCon result ;
     for(i = start+1 ; i < numSubFram ; i++){
-        if(*(input + i) <= *(input + maj_index) + border &&
-        *(input +maj_index) - border <= *(input+i)){
+        if(*(inputx + i) <= *(inputx + maj_index) + borderx &&
+        *(inputx +maj_index) - borderx <= *(inputx+i) &&
+		*(inputy + i) <= *(inputy + maj_index) + bordery &&
+        *(inputy +maj_index) - bordery <= *(inputy+i)){
             count ++ ;
             count1 ++ ;
         }
