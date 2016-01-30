@@ -87,7 +87,7 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int fillHeight = 0;
 	int fillWidth = 0;
 
-    int shiftX=mv[0];
+    int shiftX=mv[0]; // get vector values
     int shiftY=mv[1];
 
 	for (i = 0; i < heightF / blockSize; i++)
