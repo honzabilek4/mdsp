@@ -14,7 +14,7 @@ void dominantVec(int width, int height, int blockSize ,IN int *input_x , int *in
     int count = result.count ;
     int index = result.index ;
 
-    while (numbofLoops < numSubFrames || count < numSubFrames/3){
+    while (numbofLoops < numSubFrames && count < numSubFrames/3){
         startVal++;
         result = getCandidate(startVal ,input_x ,input_y , numSubFrames);
         numbofLoops++ ;
@@ -34,14 +34,14 @@ ResCon getCandidate(int start , int *inputx, int *inputy, int numSubFrames){
     int i;
     int maj_index = start ;
     float borderx = *(inputx + start)/16 ;
-	float bordery = *(inputy + start)/16 ;
+    float bordery = *(inputy + start)/16 ;
     int count, count1 = 1 ;
     ResCon result ;
     for(i = start+1 ; i < numSubFrames ; i++){
         if(*(inputx + i) <= *(inputx + maj_index) + borderx &&
-        *(inputx +maj_index) - borderx <= *(inputx+i) &&
-		*(inputy + i) <= *(inputy + maj_index) + bordery &&
-        *(inputy +maj_index) - bordery <= *(inputy+i)){
+           *(inputx +maj_index) - borderx <= *(inputx+i) &&
+	   *(inputy + i) <= *(inputy + maj_index) + bordery &&
+           *(inputy +maj_index) - bordery <= *(inputy+i)){
             count ++ ;
             count1 ++ ;
         }
