@@ -17,14 +17,8 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int pixFillHeight = 0 ; //compute resting pixels to be filled in, in order to make frame dividable by blockSize
 	int pixFillWidth  = 0 ;
 
-	if(height%blockSize){
-		int pixFillHeight = blockSize - (height%blockSize);
-	}
-
-	if(width%blockSize){
-		int pixFillWidth  = blockSize - (width%blockSize) ;
-	}
-
+	pixFillHeight = blockSize - (height%blockSize);
+	pixFillWidth  = blockSize - (width%blockSize) ;
 
 	int heightF = height + pixFillHeight; //get filled size
 	int widthF = width + pixFillWidth;
@@ -45,7 +39,7 @@ void split(int blockSize, int width, int height, unsigned char *input, unsigned 
 			fillHeight = i == (height / blockSize) ? pixFillHeight : 0;
 			fillWidth = j == (width / blockSize) ? pixFillWidth : 0;
 
-            memset(blockIndex, i*nbBlocksH + j, 1); //write block index to output
+            memset(blockIndex + i*nbBlocksW +j, i*nbBlocksW + j, 1); //write block index to output
 
 			for (k = 0; k < blockSize - fillHeight; k++) //ordinal loop
 			{
@@ -69,17 +63,13 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int i, j, k;
 	unsigned char *p_out;
 	unsigned char *p_row;
+	unsigned char *p_in;
 
 	int pixFillHeight = 0 ; //compute resting pixels to be filled in, in order to make frame dividable by blockSize
 	int pixFillWidth  = 0 ;
 
-	if(height%blockSize){
-		int pixFillHeight = blockSize - (height%blockSize);
-	}
-
-	if(width%blockSize){
-		int pixFillWidth  = blockSize - (width%blockSize) ;
-	}
+	pixFillHeight = blockSize - (height%blockSize);
+    pixFillWidth  = blockSize - (width%blockSize);
 
 	int heightF = height + pixFillHeight;
 	int widthF = width + pixFillWidth;
@@ -87,16 +77,15 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
 	int fillHeight = 0;
 	int fillWidth = 0;
 
-    int shiftX=mv[0];
+    int shiftX=mv[0]; // get vector values
     int shiftY=mv[1];
-
+    int left = 0;
 	for (i = 0; i < heightF / blockSize; i++)
 	{
 	    p_row = output + i*blockSize*width + shiftY*width;
 		for (j = 0; j < widthF / blockSize; j++)
 		{
 			p_out = p_row + j*blockSize + shiftX;
-
 			fillHeight = i == (height / blockSize) ? (pixFillHeight + shiftY) : 0;
 			fillWidth = j == (width / blockSize) ? (pixFillWidth + shiftX): 0;
 
@@ -105,23 +94,23 @@ void merge(int blockSize, int width, int height, unsigned char *input, unsigned 
                 //case for upper border
                 if(p_out + k*width < output)
                  {
-                    input += blockSize;
+                    p_in += blockSize;
                     continue;
                  }
                  //case for left border
                 else if (p_out + k*width < output + i*blockSize*width + k*width)
                 {
                     memcpy(p_out + k*width, input + shiftX, blockSize);
-                    input += blockSize;
+                    p_in += blockSize;
                 }
                 //ordinal loop
                 else{
                     memcpy(p_out + k*width, input, blockSize - fillWidth);
                     input += blockSize;
                 }
-
+                left=k; //store last k
 			}
-
+			input+=(blockSize-left-1)*blockSize; //fix input pointer position
 		}
 	}
 }

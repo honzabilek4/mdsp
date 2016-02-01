@@ -14,6 +14,8 @@
 *        the input image of size width*height
 * @param output
 *        the output buffer of size blockSize*blockSize
+* @param blockIndex
+*        index of currently processed block
 */
 void split(int blockSize, int width, int height, IN unsigned char *input, OUT unsigned char *output, OUT int *blockIndex);
 
@@ -26,9 +28,11 @@ void split(int blockSize, int width, int height, IN unsigned char *input, OUT un
 * @param height
 *        the height of the output image
 * @param input
-*        the input image slices
+*        the input image blocks
 * @param output
 *        the output image of size width*height
+* @param mv
+*        motion vector determining the domimant movement
 */
 void merge(int blockSize, int width, int height,IN unsigned char *input,OUT unsigned char *output,IN int *mv);
 
