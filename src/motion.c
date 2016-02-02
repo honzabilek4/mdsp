@@ -15,7 +15,7 @@ unsigned long SAD(unsigned char *ref, unsigned char *cur,int blockSize,int width
 	{
 		for (j = 0; j < blockSize; ++j)
 		{
-			res += abs(cur[j + i*width] - ref[j + i*blockSize]);
+			res += abs(cur[j + i*blockSize] - ref[j + i*width]);
 			//printf("RES: %lu \n",res);
 		}
 	}
@@ -35,15 +35,32 @@ void fullSearch(int width, int height, int blockSize,IN int *blockIndex,IN unsig
     int currentIndex = *blockIndex;
 
     // should apply only to first frame with no reference on input
-  if(*reference == '\0' || reference == NULL)
+   if(*reference == '\0' || reference == NULL)
         {
-          memset(output_x+currentIndex,0,1);
-          memset(output_y+currentIndex,0,1);
+          memset(output_x,0,1);
+          memset(output_y,0,1);
           return;
         }
 
-   for(i=0;i<(height-blockSize);i++){
-           for(j=0;j<(width-blockSize);j++){
+    //search only neighbour area  - set loop variables
+   int iMax,jMax;
+   int search = 3*blockSize;
+
+   iMax = (currentIndex/nblockW)*blockSize + search;
+   jMax = (currentIndex%nblockW)*blockSize + search;
+   i = (currentIndex/nblockW)*blockSize - search;
+   j = (currentIndex%nblockW)*blockSize - search;
+
+   i= i<0 ? 0 : i;
+   j= j<0 ? 0 : j;
+
+   iMax = iMax>(height-blockSize)? (height - blockSize):iMax;
+   jMax = jMax>(width-blockSize)? (width - blockSize):jMax;
+
+
+   //start loop
+   for(i;i<iMax;i++){
+           for(j;j<jMax;j++){
                sad = SAD(reference+j+i*width,input,blockSize,width);
 
                if (pre>sad){
@@ -53,16 +70,19 @@ void fullSearch(int width, int height, int blockSize,IN int *blockIndex,IN unsig
                     }
             }
     }
-     mv[0]=(currentIndex%nblockW)*blockSize - (position[0]%width);
-     mv[1]=(currentIndex/nblockW)*blockSize - (position[1]/width);// calculate the movement vector, integer division
+     mv[0]=(currentIndex%nblockW)*blockSize - (position[0]);
+     mv[1]=(currentIndex/nblockW)*blockSize - (position[1]);// calculate the movement vector, integer division
 
+//
+//     memset(output_x+currentIndex,mv[0],1);
+//     memset(output_y+currentIndex,mv[1],1);
 
-     memset(output_x+currentIndex,mv[0],1);
-     memset(output_y+currentIndex,mv[1],1);
+     *output_x = mv[0];
+     *output_y = mv[1];
 
-    printf("PRE: %lu \n", pre);
-    printf("pos_x: %d \t pos_y: %d \n", position[0],position[1]);
-    printf("index: %d \t x: %d \t y: %d \n", currentIndex, mv[0], mv[1]);
+    //printf("PRE: %lu \n", pre);
+    //printf("pos_x: %d \t pos_y: %d \n", position[0],position[1]);
+      //printf("index: %d \t x: %d \t y: %d \n", currentIndex, mv[0], mv[1]);
 
      return;
 }
