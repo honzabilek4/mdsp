@@ -14,7 +14,7 @@ void dominantVec(int width, int height, int blockSize ,IN int *input_x , int *in
     int count = result.count ;
     int index = result.index ;
 
-    while (numbofLoops < numSubFrames || count < numSubFrames/3){
+    while (numbofLoops < numSubFrames && count < numSubFrames/3){
         startVal++;
         result = getCandidate(startVal ,input_x ,input_y , numSubFrames);
         numbofLoops++ ;
